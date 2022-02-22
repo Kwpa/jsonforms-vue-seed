@@ -1,15 +1,27 @@
 {
     "teams": [
         {
-            "id": "t_001",
             "title": "TEAM ONE TITLE",
-            "bio": "biography"
+            "id": "t_001",
+            "bio": "biography",
+            "items":
+            [
+                {
+                    "id":"i_001"
+                }
+            ]
             
         },
         {
-            "id": "t_002",
             "title": "TEAM TWO TITLE",
-            "bio": "biography"   
+            "id": "t_002",
+            "bio": "biography" ,
+            "items":
+            [
+                {
+                    "id":"i_001"
+                }
+            ]  
         }
     ]
 }
