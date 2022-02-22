@@ -1,5 +1,6 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
+  
   <h1>JSON Forms Vue 3</h1>
   <div class="myform">
     <json-forms
@@ -10,11 +11,21 @@
       @change="onChange"
     />
   </div>
+  <button v-on:click="onClick"></button>
+  <div class="data">
+    <p>
+      {{data}}
+    </p>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import schemaJson from "./assets/schemaJson.json";
+import uiJson from "./assets/uiJson.json";
+import dataJson from "./assets/data.json";
 import { JsonForms, JsonFormsChangeEvent } from "@jsonforms/vue";
+
 import {
   defaultStyles,
   mergeStyles,
@@ -29,86 +40,8 @@ const renderers = [
   // here you can add custom renderers
 ];
 
-const schema = {
-  properties: {
-    name: {
-      type: "string",
-      minLength: 1,
-      description: "The task's name"
-    },
-    description: {
-      title: "Long Description",
-      type: "string",
-    },
-    done: {
-      type: "boolean",
-    },
-    dueDate: {
-      type: "string",
-      format: "date",
-      description: "The task's due date"
-    },
-    rating: {
-      type: "integer",
-      maximum: 5,
-    },
-    recurrence: {
-      type: "string",
-      enum: ["Never", "Daily", "Weekly", "Monthly"]
-    },
-    recurrenceInterval: {
-      type: "integer",
-      description: "Days until recurrence"
-    },
-  },
-};
-
-const uischema = {
-  type: "HorizontalLayout",
-  elements: [
-    {
-      type: "VerticalLayout",
-      elements: [
-        {
-          type: "Control",
-          scope: "#/properties/name",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/description",
-          options: {
-            multi: true,
-          }
-        },
-        {
-          type: "Control",
-          scope: "#/properties/done",
-        },
-      ],
-    },
-    {
-      type: "VerticalLayout",
-      elements: [
-        {
-          type: "Control",
-          scope: "#/properties/dueDate",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/rating",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/recurrence",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/recurrenceInterval",
-        },
-      ],
-    },
-  ],
-};
+const schema = schemaJson;
+const uischema = uiJson;
 
 export default defineComponent({
   name: "App",
@@ -119,21 +52,41 @@ export default defineComponent({
     return {
       // freeze renderers for performance gains
       renderers: Object.freeze(renderers),
-      data: {
-        name: "Send email to Adrian",
-        description: "Confirm if you have passed the subject\nHereby ...",
-        done: true,
-        recurrence: "Daily",
-        rating: 3,
-      },
+      data: dataJson,
       schema,
-      uischema,
+      uischema
     };
   },
   methods: {
     onChange(event: JsonFormsChangeEvent) {
       this.data = event.data;
     },
+    onClick()
+    {
+      console.log("click");
+      const XHR = new XMLHttpRequest(),
+        FD  = new FormData();
+
+      // Push our data into our FormData object
+        FD.append( "data", JSON.stringify(this.data));
+
+      // Define what happens on successful data submission
+      XHR.addEventListener( 'load', function( event ) {
+        alert( 'Yeah! Data sent and response loaded.' );
+      } );
+
+      // Define what happens in case of error
+      XHR.addEventListener(' error', function( event ) {
+        alert( 'Oops! Something went wrong.' );
+      } );
+
+      // Set up our request
+      XHR.open( 'POST', 'https://example.com/cors.php' );
+
+      // Send our FormData object; HTTP headers are set automatically
+      XHR.send( FD );
+    }
+
   },
   provide() {
     return {
@@ -171,5 +124,10 @@ export default defineComponent({
 
 .text-area {
   min-height: 80px;
+}
+
+.data{
+  max-width: 400px;
+  margin: auto;
 }
 </style>
