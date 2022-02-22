@@ -11,7 +11,8 @@
       @change="onChange"
     />
   </div>
-  <button v-on:click="onClick"></button>
+  <button v-on:click="sendBinData">Send To Server</button>
+  <button v-on:click="readBinData">Read From Server</button>
   <div class="data">
     <p>
       {{data}}
@@ -22,6 +23,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import schemaJson from "./assets/schemaJson.json";
+import teamSchemaJson from "./assets/teamSchema.json";
 import uiJson from "./assets/uiJson.json";
 import dataJson from "./assets/data.json";
 import { JsonForms, JsonFormsChangeEvent } from "@jsonforms/vue";
@@ -31,6 +33,7 @@ import {
   mergeStyles,
   vanillaRenderers,
 } from "@jsonforms/vue-vanilla";
+import axios from 'axios';
 
 // mergeStyles combines all classes from both styles definitions into one
 const myStyles = mergeStyles(defaultStyles, { control: { label: "mylabel" } });
@@ -41,7 +44,9 @@ const renderers = [
 ];
 
 const schema = schemaJson;
+const teamSchema = teamSchemaJson;
 const uischema = uiJson;
+const teamId = "t_001";
 
 export default defineComponent({
   name: "App",
@@ -49,6 +54,7 @@ export default defineComponent({
     JsonForms,
   },
   data() {
+    //dataJson.teams[0]
     return {
       // freeze renderers for performance gains
       renderers: Object.freeze(renderers),
@@ -59,6 +65,7 @@ export default defineComponent({
   },
   methods: {
     onChange(event: JsonFormsChangeEvent) {
+      console.log(event);
       this.data = event.data;
     },
     onClick()
@@ -86,7 +93,56 @@ export default defineComponent({
       // Send our FormData object; HTTP headers are set automatically
       XHR.send( FD );
     }
+    ,
+    async getData() {
+      try {
+        const response = await axios.get(
+          "http://jsonplaceholder.typicode.com/posts"
+        );
+        // JSON responses are automatically parsed.
+        this.data = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
+    async sendBinData() {
+      const req = new XMLHttpRequest();
 
+      req.onreadystatechange = () => {
+      if (req.readyState == XMLHttpRequest.DONE) {
+        console.log(req.responseText);        
+        }
+      };
+
+      req.open("PUT", "https://api.jsonbin.io/v3/b/62152dc91b38ee4b33c90568", true);
+      req.setRequestHeader("Content-Type", "application/json");
+      req.setRequestHeader("X-Master-Key", "$2b$10$5kL8aZjmWy4Epqa0b8W3HeUUL00fyq7UhvSmLDvIBKEA.iRMy7Khi");
+      req.send(JSON.stringify(this.data));
+    },
+
+    async readBinData()
+    {
+      const req = new XMLHttpRequest();
+
+      req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) {
+          console.log(req.response);
+          console.log(req.responseText);
+
+          this.data = JSON.parse(req.responseText).record;
+          
+        }
+      };
+
+      req.open("GET", "https://api.jsonbin.io/v3/b/62152dc91b38ee4b33c90568/latest", true);
+      req.setRequestHeader("X-Master-Key", "$2b$10$5kL8aZjmWy4Epqa0b8W3HeUUL00fyq7UhvSmLDvIBKEA.iRMy7Khi");
+      req.send();
+    }
+  },
+  created()
+  {
+    //this.readBinData();
   },
   provide() {
     return {

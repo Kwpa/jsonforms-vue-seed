@@ -11,6 +11,7 @@
     "@jsonforms/core": "^2.5.1",
     "@jsonforms/vue": "^2.5.1",
     "@jsonforms/vue-vanilla": "^2.5.1",
+    "axios": "^0.26.0",
     "core-js": "^3.6.5",
     "vue": "^3.0.0"
   },
