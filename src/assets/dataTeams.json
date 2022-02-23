@@ -1,0 +1,17 @@
+{
+    "teams": [
+      {
+        "title": "Test title",
+        "id": "t_???",
+        "biography": "Test biography",
+        "briefcase":
+        [
+            {"id":"i_001"}
+        ],
+        "story":
+        [
+            {"id":"s_001"}
+        ]
+      }
+    ]
+  }

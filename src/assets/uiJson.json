@@ -1,9 +1,92 @@
 {
-  "type": "VerticalLayout",
-  "elements": [
-    {
-      "type": "Control",
-      "scope": "#/properties/teams"
+  "teams": {
+    "type": "ListWithDetail",
+    "scope": "#/properties/teams",
+    "options": {
+      "detail": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "HorizontalLayout",
+            "elements": [
+              {
+                "type": "Control",
+                "scope": "#/properties/title"
+              },
+              {
+                "type": "Control",
+                "scope": "#/properties/id"
+              },
+              {
+                "type": "Control",
+                "scope": "#/properties/bio"
+              },
+              {
+                "type": "ListWithDet",
+                "scope": "#/properties/story",
+                "options": {
+                  "detail": {
+                    "type": "VerticalLayout",
+                    "elements": [
+                      {
+                        "type": "Control",
+                        "scope": "#/properties/id"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "ListWithDet",
+                "scope": "#/properties/briefcase",
+                "options": {
+                  "detail": {
+                    "type": "VerticalLayout",
+                    "elements": [
+                      {
+                        "type": "Control",
+                        "scope": "#/properties/id"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/biography"
+          }
+        ]
+      }
     }
-  ]
+  },
+  "items": {
+    "type": "ListWithDetail",
+    "scope": "#/properties/items",
+    "options": {
+      "detail": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "HorizontalLayout",
+            "elements": [
+              {
+                "type": "Control",
+                "scope": "#/properties/title"
+              },
+              {
+                "type": "Control",
+                "scope": "#/properties/id"
+              }
+            ]
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/biography"
+          }
+        ]
+      }
+    }
+  }
 }

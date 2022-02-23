@@ -5,6 +5,7 @@
       "type": "array",
       "items": {
         "type": "object",
+        "title": "Teams",
         "properties": {
           "title": {
             "type": "string"
@@ -12,21 +13,63 @@
           "id": {
             "type": "string"
           },
-          "bio": {
+          "biography": {
             "type": "string"
           },
-          "items": {
+          "briefcase": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
+            "items":{
+              "type":"object",
+              "title":"Briefcase",
+              "properties":{
+                "id":{
+                  "type":"string"
+                }
+              }
+            }
+          },
+          "story": {
+            "type": "array",
+            "items":{
+              "type":"object",
+              "title":"Story",
+              "properties":{
+                "id":{
+                  "type":"string"
                 }
               }
             }
           }
-        }
+        },
+        "required": [
+          "title",
+          "id"
+        ]
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Items",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "iconPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "id"
+        ]
       }
     }
   }

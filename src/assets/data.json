@@ -1,27 +1,31 @@
 {
     "teams": [
-        {
-            "title": "TEAM ONE TITLE",
-            "id": "t_001",
-            "bio": "biography",
-            "items":
-            [
-                {
-                    "id":"i_001"
-                }
-            ]
-            
-        },
-        {
-            "title": "TEAM TWO TITLE",
-            "id": "t_002",
-            "bio": "biography" ,
-            "items":
-            [
-                {
-                    "id":"i_001"
-                }
-            ]  
-        }
+      {
+        "title": "Max",
+        "id": "t_001",
+        "biography": "The aliens are from a distant land.",
+        "briefcase":
+        [
+            {"id":"i_001"}
+        ],
+        "story":
+        [
+            {"id":"s_001"}
+        ]
+      },
+      {
+        "title": "Rob",
+        "id": "t_002",
+        "biography": "The aliens have trombones for hands.",
+        "briefcase":
+        [
+            {"id":"i_002"}
+        ],
+        "story":
+        [
+            {"id":"s_002"}
+        ]
+
+      }
     ]
-}
+  }

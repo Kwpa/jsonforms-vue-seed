@@ -1,16 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  
-  <h1>JSON Forms Vue 3</h1>
-  <div class="myform">
-    <json-forms
-      :data="data"
-      :renderers="renderers"
-      :schema="schema"
-      :uischema="uischema"
-      @change="onChange"
-    />
+  <div style="padding-left:100px; padding-right:100px; margin: auto;"><img alt="Vue logo" src="./assets/DDM-Logo.png" style="width: 300px; height: 300px;"/></div>
+  <div>
+  <button v-on:click="value1=false; value0=true; readBinData();">Teams</button>
+  <button v-on:click="value1=true; value0=false; readBinData();">Items</button>
+  <button>Story</button>
+  <button>Notifications</button>
+  <button>Ballots</button>
+  <button>Labels</button>
   </div>
+
+  <h1>DIGIDAMARA STATIC DATA</h1>
+  <div>
+    <div style="height: 200px"> </div>
+    <h2>Loading...</h2>
+    <div style="height: 200px"> </div>
+  </div>
+  <div>
+    <div class="myform" v-if="value0">
+      <json-forms
+        :data="data"
+        :renderers="renderers"
+        :schema="schema"
+        :uischema="uischema"
+        @change="onChange"
+      />
+    </div>
+    <div class="myform" v-if="value1">
+      <json-forms
+        :data="data"
+        :renderers="renderers"
+        :schema="schema"
+        :uischema="uischema"
+        @change="onChange"
+      />
+    </div>
+  </div>
+
   <button v-on:click="sendBinData">Send To Server</button>
   <button v-on:click="readBinData">Read From Server</button>
   <div class="data">
@@ -44,9 +69,20 @@ const renderers = [
 ];
 
 const schema = schemaJson;
-const teamSchema = teamSchemaJson;
 const uischema = uiJson;
-const teamId = "t_001";
+const apiKey = "$2b$10$5kL8aZjmWy4Epqa0b8W3HeUUL00fyq7UhvSmLDvIBKEA.iRMy7Khi";
+const jsonbinAccessUrls = {
+  "teamsUrl":"62152dc91b38ee4b33c90568",
+  "itemsUrl":"62158d528152db698ceeb0a3",
+  "storyUrl":"62158fc71b38ee4b33c9e788",
+  "notificationsUrl":"62158ff31b38ee4b33c9e807",
+  "ballotsUrl":"621590ea1b38ee4b33c9eab7",
+  "labelsUrl":"621591751b38ee4b33c9ec2e"
+}
+
+let categoryIndex = 0;
+
+
 
 export default defineComponent({
   name: "App",
@@ -54,13 +90,20 @@ export default defineComponent({
     JsonForms,
   },
   data() {
-    //dataJson.teams[0]
+     const teamsSchema = schema.properties.teams;
+     const itemsSchema = schema.properties.items;
+     const teamsUi = uischema.teams;
+     const itemsUi = uischema.items;
+    console.log("set items ui schema" + itemsUi);
+
     return {
       // freeze renderers for performance gains
       renderers: Object.freeze(renderers),
       data: dataJson,
-      schema,
-      uischema
+      teamsSchema,
+      teamsUi,
+      value0: true,
+      value1: false
     };
   },
   methods: {
@@ -106,8 +149,46 @@ export default defineComponent({
       }
     },
     
+    /* goToCategory(value: number)
+    {
+      categoryIndex = Math.min(Math.max(value, 0), 5);
+    },
+    pressCategoryButton(toggleIndex: number)
+    {
+      const list = [this.value0, this.value1];
+      for(let i=0; i<list.length; i++)
+      {
+        list[i] = false;
+      }
+      this.goToCategory(toggleIndex);
+    }, */
+
     async sendBinData() {
       const req = new XMLHttpRequest();
+
+      categoryIndex = 0;
+      let path = "";
+      switch(categoryIndex)
+      {
+        case 0:
+        path = jsonbinAccessUrls.teamsUrl;
+        break;
+        case 1:
+        path = jsonbinAccessUrls.itemsUrl;
+        break;
+        case 2:
+        path = jsonbinAccessUrls.storyUrl;
+        break;
+        case 3:
+        path = jsonbinAccessUrls.notificationsUrl;
+        break;
+        case 4:
+        path = jsonbinAccessUrls.ballotsUrl;
+        break;
+        case 5:
+        path = jsonbinAccessUrls.labelsUrl;
+        break;
+      }
 
       req.onreadystatechange = () => {
       if (req.readyState == XMLHttpRequest.DONE) {
@@ -115,14 +196,37 @@ export default defineComponent({
         }
       };
 
-      req.open("PUT", "https://api.jsonbin.io/v3/b/62152dc91b38ee4b33c90568", true);
+      req.open("PUT", "https://api.jsonbin.io/v3/b/"+path, true);
       req.setRequestHeader("Content-Type", "application/json");
-      req.setRequestHeader("X-Master-Key", "$2b$10$5kL8aZjmWy4Epqa0b8W3HeUUL00fyq7UhvSmLDvIBKEA.iRMy7Khi");
+      req.setRequestHeader("X-Master-Key", apiKey);
       req.send(JSON.stringify(this.data));
     },
 
     async readBinData()
     {
+      let path = "";
+      switch(categoryIndex)
+      {
+        case 0:
+        path = jsonbinAccessUrls.teamsUrl;
+        break;
+        case 1:
+        path = jsonbinAccessUrls.itemsUrl;
+        break;
+        case 2:
+        path = jsonbinAccessUrls.storyUrl;
+        break;
+        case 3:
+        path = jsonbinAccessUrls.notificationsUrl;
+        break;
+        case 4:
+        path = jsonbinAccessUrls.ballotsUrl;
+        break;
+        case 5:
+        path = jsonbinAccessUrls.labelsUrl;
+        break;
+      }
+
       const req = new XMLHttpRequest();
 
       req.onreadystatechange = () => {
@@ -135,13 +239,14 @@ export default defineComponent({
         }
       };
 
-      req.open("GET", "https://api.jsonbin.io/v3/b/62152dc91b38ee4b33c90568/latest", true);
-      req.setRequestHeader("X-Master-Key", "$2b$10$5kL8aZjmWy4Epqa0b8W3HeUUL00fyq7UhvSmLDvIBKEA.iRMy7Khi");
+      req.open("GET", "https://api.jsonbin.io/v3/b/"+ path + "/latest", true);
+      req.setRequestHeader("X-Master-Key", apiKey);
       req.send();
     }
   },
   created()
   {
+    //this.pressCategoryButton(1);
     //this.readBinData();
   },
   provide() {
@@ -186,4 +291,10 @@ export default defineComponent({
   max-width: 400px;
   margin: auto;
 }
+
+.invisible{
+  visibility: hidden;
+}
 </style>
+
+
